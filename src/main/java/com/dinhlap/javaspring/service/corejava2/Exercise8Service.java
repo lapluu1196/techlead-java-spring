@@ -11,9 +11,9 @@ public interface Exercise8Service {
     Tìm thông tin sản phẩm dựa trên mã sản phẩm.
     Xóa sản phẩm khỏi danh sách dựa trên mã sản phẩm.
     Cập nhật thông tin sản phẩm.*/
-    void addProduct(Product8 newProduct);
-    void showProduct();
+    String addProduct(Product8 newProduct);
+    String showProduct();
     Product8 searchProduct(String code);
-    void deleteProduct(String code);
-    void updateProduct(Product8 updateProduct);
+    String deleteProduct(String code);
+    String updateProduct(Product8 updateProduct);
 }

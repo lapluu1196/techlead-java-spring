@@ -1,10 +1,12 @@
 package com.dinhlap.javaspring.service.corejava2.impl;
 
 import com.dinhlap.javaspring.service.corejava2.Exercise13To18Service;
+import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
 import java.util.Set;
 
+@Service
 public class Exercise13To18ServiceImpl implements Exercise13To18Service {
     @Override
     public Set<Integer> removeDuplicate(int[] arr) {

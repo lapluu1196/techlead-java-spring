@@ -16,8 +16,8 @@ public class Exercise2ServiceImpl implements Exercise2Service {
     }
 
     @Override
-    public void displayCountry() {
-        countries.forEach(System.out::println);
+    public String displayCountry() {
+        return countries.toString();
     }
 
     @Override

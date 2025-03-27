@@ -17,8 +17,8 @@ public class Exercise3ServiceImpl implements Exercise3Service {
     }
 
     @Override
-    public void displayPerson() {
-        persons.forEach((name, age) -> System.out.println(name + " - " + age));
+    public String displayPerson() {
+        return persons.toString();
     }
 
     @Override

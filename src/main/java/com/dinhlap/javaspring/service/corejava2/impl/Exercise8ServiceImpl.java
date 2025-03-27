@@ -12,13 +12,24 @@ public class Exercise8ServiceImpl implements Exercise8Service {
     private final Map<String, Product8> products = new HashMap<>();
 
     @Override
-    public void addProduct(Product8 newProduct) {
+    public String addProduct(Product8 newProduct) {
+        if (products.containsKey(newProduct.getCode())) {
+            return "Product already exists";
+        }
         products.put(newProduct.getCode(), newProduct);
+        return "Product added successfully";
     }
 
     @Override
-    public void showProduct() {
-        products.forEach((code, product) -> System.out.println(product));
+    public String showProduct() {
+        if (products.isEmpty()) {
+            return "No products found";
+        }
+        StringBuilder sb = new StringBuilder();
+        for (Product8 product : products.values()) {
+            sb.append(product).append("\n");
+        }
+        return sb.toString();
     }
 
     @Override
@@ -31,12 +42,20 @@ public class Exercise8ServiceImpl implements Exercise8Service {
     }
 
     @Override
-    public void deleteProduct(String code) {
+    public String deleteProduct(String code) {
         products.remove(code);
+        if (products.containsKey(code)) {
+            return "Delete failed";
+        }
+        return "Product deleted successfully";
     }
 
     @Override
-    public void updateProduct(Product8 updatedProduct) {
+    public String updateProduct(Product8 updatedProduct) {
+        if (!products.containsKey(updatedProduct.getCode())) {
+            return "Product not found";
+        }
         products.put(updatedProduct.getCode(), updatedProduct);
+        return "Product updated successfully";
     }
 }

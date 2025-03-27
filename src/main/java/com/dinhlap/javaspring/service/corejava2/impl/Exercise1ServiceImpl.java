@@ -17,8 +17,8 @@ public class Exercise1ServiceImpl implements Exercise1Service {
     }
 
     @Override
-    public void displayElementsInList() {
-        list.forEach(System.out::println);
+    public String displayElementsInList() {
+        return list.toString();
     }
 
     @Override

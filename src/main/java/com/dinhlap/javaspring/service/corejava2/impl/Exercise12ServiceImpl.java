@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Stream;
 
 @Service
 public class Exercise12ServiceImpl implements Exercise12Service {
@@ -28,49 +29,46 @@ public class Exercise12ServiceImpl implements Exercise12Service {
 
 
     @Override
-    public void sortProduct(int option) {
+    public Set<Product12> sortProduct(int option) {
         switch (option) {
             case 1:
-                sortByName();
+                sortByName(productList);
                 break;
             case 2:
-                sortByPrice();
+                sortByPrice(productList);
                 break;
             case 3:
-                sortByDate();
+                sortByDate(productList);
                 break;
             case 4:
-                sortByPriceAndDate();
+                sortByPriceAndDate(productList);
                 break;
             default:
                 System.out.println("Invalid option");
                 break;
         }
+        return productList;
     }
 
 
-    public void sortByName() {
+    public void sortByName(Set<Product12> productList) {
         productList.stream()
-                .sorted((p1, p2) -> p1.getName().compareTo(p2.getName()))
-                .forEach(System.out::println);
+                .sorted((p1, p2) -> p1.getName().compareTo(p2.getName()));
     }
 
-    public void sortByPrice() {
+    public void sortByPrice(Set<Product12> productList) {
         productList.stream()
-                .sorted((p1, p2) -> Double.compare(p1.getPrice(), p2.getPrice()))
-                .forEach(System.out::println);
+                .sorted((p1, p2) -> Double.compare(p1.getPrice(), p2.getPrice()));
     }
 
-    public void sortByDate() {
+    public void sortByDate(Set<Product12> productList) {
         productList.stream()
-                .sorted((p1, p2) -> p1.getDateOfManufacture().compareTo(p2.getDateOfManufacture()))
-                .forEach(System.out::println);
+                .sorted((p1, p2) -> p1.getDateOfManufacture().compareTo(p2.getDateOfManufacture()));
     }
 
-    public void sortByPriceAndDate() {
+    public void sortByPriceAndDate(Set<Product12> productList) {
         productList.stream()
                 .sorted((p1, p2) -> Double.compare(p1.getPrice(), p2.getPrice()))
-                .sorted((p1, p2) -> p1.getDateOfManufacture().compareTo(p2.getDateOfManufacture()))
-                .forEach(System.out::println);
+                .sorted((p1, p2) -> p1.getDateOfManufacture().compareTo(p2.getDateOfManufacture()));
     }
 }

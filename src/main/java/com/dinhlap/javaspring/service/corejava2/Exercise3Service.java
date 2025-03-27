@@ -13,7 +13,7 @@ public interface Exercise3Service {
     Kiểm tra xem một người có tồn tại trong HashMap hay không.
 */
     Map<String, Integer> addPerson(String name, int age);
-    void displayPerson();
+    String displayPerson();
     int findAge(String name);
     Map<String, Integer> removePerson(String name);
     boolean checkPerson(String name);

@@ -17,6 +17,9 @@ public class Exercise11ServiceImpl implements Exercise11Service {
 
     @Override
     public void addWord(String word, String meaning) {
+        if (dictionary.containsKey(word)) {
+            throw new IllegalArgumentException("Word already exists in the dictionary.");
+        }
         dictionary.put(word, meaning);
     }
 }

@@ -13,7 +13,7 @@ public interface Exercise1Service {
     Kiểm tra một phần tử có tồn tại trong ArrayList hay không.*/
 
     List<Integer> addElementToList(int element);
-    void displayElementsInList();
+    String displayElementsInList();
     int sumOfElementsInList();
     int maxElementInList();
     int minElementInList();

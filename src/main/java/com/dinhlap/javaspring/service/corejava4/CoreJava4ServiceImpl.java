@@ -13,6 +13,8 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -22,6 +24,9 @@ import java.util.Map;
 
 @Service
 public class CoreJava4ServiceImpl implements CoreJava4Service {
+    public final int COLUMN_INDEX_ID = 1;
+    public final int COLUMN_INDEX_NAME = 2;
+
     private final List<Employee> employees = new ArrayList<>();
     private final List<WorkingDay> workingDays = new ArrayList<>();
     private final List<Shift> shifts = new ArrayList<>();
@@ -36,6 +41,16 @@ public class CoreJava4ServiceImpl implements CoreJava4Service {
         for (int cellNum = 0; cellNum < row.getLastCellNum(); cellNum++) {
             Cell cell = row.getCell(cellNum);
             if (cell != null && cell.getCellType() != CellType.BLANK) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean isColumnEmpty(Sheet sheet, int column) {
+        for (int row = 0; row < sheet.getLastRowNum(); row++) {
+            Row currentRow = sheet.getRow(row);
+            if (currentRow != null && currentRow.getCell(column) != null && currentRow.getCell(column).getCellType() != CellType.BLANK) {
                 return false;
             }
         }
@@ -91,6 +106,9 @@ public class CoreJava4ServiceImpl implements CoreJava4Service {
         List<Integer> dayRange = new ArrayList<>();
 
         for (int i = totalSalaryColumn + 1; i < dayRow.getLastCellNum(); i++) {
+            if (isColumnEmpty(sheet, i)) {
+                continue;
+            }
             Cell cell = dayRow.getCell(i);
             if (cell != null) {
                 String cellValue = "";
@@ -141,61 +159,87 @@ public class CoreJava4ServiceImpl implements CoreJava4Service {
     }
 
     @Override
-    public List<WorkingDay> getListOfWorkingDay(Sheet sheet, Map<String, Double> shiftsRate, Map<Integer, List<Integer>> colDayRange, int employeeRow, int totalSalaryColumn) {
-        List<WorkingDay> workingDays = new ArrayList<>();
-        for (Map.Entry<Integer, List<Integer>> entry : colDayRange.entrySet()) {
-            WorkingDay workingDay = new WorkingDay(String.valueOf(entry.getKey()));
-
-            for (int j = 0; j < entry.getValue().size(); j++) {
-                int colIndex = entry.getValue().get(j);
-                String shiftName = sheet.getRow(5).getCell(colIndex).getStringCellValue();
-
-                if (shiftName != null && !shiftName.equalsIgnoreCase("$")) {
-                    double hours = 0.0;
-                    Cell shiftCell = sheet.getRow(employeeRow).getCell(colIndex);
-                    if (shiftCell != null && shiftCell.getCellType() == CellType.NUMERIC) {
-                        hours = shiftCell.getNumericCellValue();
-                    }
-                    if (!shiftsRate.containsKey(shiftName)) {
-                        throw new IllegalArgumentException("Shift name not found: " + shiftName);
-                    }
-                    double rate = shiftsRate.getOrDefault(shiftName, 0.0);
-                    double amount = rate * hours;
-                    Shift shift = new Shift(shiftName, hours, amount);
-                    workingDay.addShift(shift, hours, amount);
-                }
-            }
-            workingDays.add(workingDay);
-        }
-
-        return workingDays;
-    }
-
-    @Override
     public Shift getShift(Sheet sheet, Map<String, Double> shiftsRate, int colDayRange, int employeeRow) {
         String shiftName = sheet.getRow(5).getCell(colDayRange).getStringCellValue();
-        double amount = 0.0;
-        double hours = 0.0;
 
         if (shiftName != null && !shiftName.equalsIgnoreCase("$")) {
+            double hours = 0.0;
             Cell shiftCell = sheet.getRow(employeeRow).getCell(colDayRange);
             if (shiftCell != null && shiftCell.getCellType() == CellType.NUMERIC) {
                 hours = shiftCell.getNumericCellValue();
             }
             if (!shiftsRate.containsKey(shiftName)) {
-                throw new IllegalArgumentException("Shift name not found: " + shiftName);
+                shiftsRate.put(shiftName + " - Not defined!", 0.0);
+                shiftName = shiftName + " - Not defined!";
             }
             double rate = shiftsRate.getOrDefault(shiftName, 0.0);
-            amount = rate * hours;
+            double amount = rate * hours;
+            return new Shift(shiftName, hours, amount);
         }
-
-        return new Shift(shiftName, hours, amount);
+        return null;
     }
 
     @Override
-    public WorkingDay getWorkingDay(Sheet sheet, List<Shift> shifts, int colDayRange, int employeeRow) {
-        WorkingDay workingDay = new WorkingDay(String.valueOf(colDayRange));
-        workingDay.setShifts(shifts);
-        return null;
+    public WorkingDay getWorkingDay(Sheet sheet, Map<String, Double> shiftsRate, int day, List<Integer> colIndexRange, int employeeRow) {
+        WorkingDay workingDay = new WorkingDay(String.valueOf(day));
+        for (int colIndex : colIndexRange) {
+            Shift shift = getShift(sheet, shiftsRate, colIndex, employeeRow);
+            if (shift != null) {
+                workingDay.addShift(shift, shift.getHours(), shift.getAmount());
+            }
+        }
+        return workingDay;
+    }
+
+    @Override
+    public Employee getEmployee(Sheet sheet, Map<String, Double> shiftsRate, Map<Integer, List<Integer>> colDayRange, int employeeRow, int totalSalaryColumn) {
+        Row employeeRowData = sheet.getRow(employeeRow);
+
+        String employeeId = employeeRowData.getCell(COLUMN_INDEX_ID).getStringCellValue();
+        String employeeName = employeeRowData.getCell(COLUMN_INDEX_NAME).getStringCellValue();
+
+        Employee employee = new Employee(employeeId, employeeName, employeeRowData.getCell(totalSalaryColumn).getNumericCellValue());
+        employee.setShiftsRate(shiftsRate);
+
+        return employee;
+    }
+
+    @Override
+    public List<Employee> readTimesheet(String filePath) throws IOException {
+        List<Employee> employees = new ArrayList<>();
+
+        try (InputStream is = new FileInputStream(new File(filePath))) {
+            Workbook workbook = getWorkbook(is, filePath);
+            Sheet sheet = workbook.getSheetAt(0);
+
+            int totalSalaryColumn = getTotalAmountColumn(sheet);
+
+            Map<Integer, List<Integer>> colIndexRangeOfWorkingDay = getColDayRange(sheet, totalSalaryColumn);
+
+            for (int i = 6; i < sheet.getLastRowNum(); i++) {
+                Row row = sheet.getRow(i);
+
+                Map<String, Double> shiftsRate = shiftsRate(sheet, totalSalaryColumn, i);
+
+                List<WorkingDay> workingDays = new ArrayList<>();
+
+                for (Map.Entry<Integer, List<Integer>> entry : colIndexRangeOfWorkingDay.entrySet()) {
+                    WorkingDay workingDay = getWorkingDay(sheet, shiftsRate, entry.getKey(), entry.getValue(), i);
+                    workingDays.add(workingDay);
+                }
+
+                Employee employee = new Employee(row.getCell(COLUMN_INDEX_ID).getStringCellValue(),
+                        row.getCell(COLUMN_INDEX_NAME).getStringCellValue(),
+                        row.getCell(totalSalaryColumn).getNumericCellValue());
+
+                employee.setShiftsRate(shiftsRate);
+                for (WorkingDay workingDay: workingDays) {
+                    employee.addWorkingDay(workingDay);
+                }
+                employees.add(employee);
+            }
+        }
+
+        return employees;
     }
 }

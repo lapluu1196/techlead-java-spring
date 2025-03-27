@@ -12,7 +12,7 @@ public interface Exercise2Service {
     Tính số lượng các quốc gia có trong HashSet.
 */
     Set<String> addCountry(String country);
-    void displayCountry();
+    String displayCountry();
     boolean checkCountry(String country);
     Set<String> removeCountry(String country);
     int countCountry();
