@@ -1,0 +1,28 @@
+spring.application.name=JAVASPRING
+
+#Server configuration
+server.port=8080
+server.address=0.0.0.0
+
+#JWT configuration
+jwt.secret=wLpAk3jooL5mOyAlm7voVkP4wOXy/zj+xqm9K8h9sJUNABuY8XFYmbrWBQn1vfzF
+jwt.expiration-ms=86400000
+
+#Database configuration
+spring.datasource.url=jdbc:mysql://localhost:3306/sakila?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC&characterEncoding=UTF-8
+spring.datasource.username=root
+spring.datasource.password=rootpassword
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+
+#Hibernate configuration
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL8Dialect
+spring.jpa.properties.hibernate.connection.characterEncoding=UTF-8
+spring.jpa.properties.hibernate.connection.useUnicode=true
+spring.jpa.show-sql=true
+spring.jpa.hibernate.ddl-auto=update
+
+#Log configuration
+logging.level.org.springframework.security=DEBUG
+
+#Swagger configuration
+springdoc.api-docs.path=/api-docs

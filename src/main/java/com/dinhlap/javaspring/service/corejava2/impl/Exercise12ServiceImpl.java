@@ -1,0 +1,76 @@
+package com.dinhlap.javaspring.service.corejava2.impl;
+
+import com.dinhlap.javaspring.entity.javacore2.Product12;
+import com.dinhlap.javaspring.service.corejava2.Exercise12Service;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
+
+@Service
+public class Exercise12ServiceImpl implements Exercise12Service {
+    private final Set<Product12> productList = new HashSet<>();
+
+    public Exercise12ServiceImpl() {
+        productList.add(new Product12("Laptop", "L01", 5000000,LocalDate.of(2022, 1, 1)));
+        productList.add(new Product12("Laptop", "L02", 6000000, LocalDate.of(2022, 1, 2)));
+        productList.add(new Product12("Laptop", "L03", 7000000, LocalDate.of(2022, 1, 3)));
+        productList.add(new Product12("Laptop", "L04", 8000000, LocalDate.of(2022, 1, 4)));
+        productList.add(new Product12("Laptop", "L05", 9000000, LocalDate.of(2022, 1, 5)));
+        productList.add(new Product12("Laptop", "L06", 10000000, LocalDate.of(2022, 1, 6)));
+        productList.add(new Product12("Macbook", "L07", 11500000, LocalDate.of(2022, 1, 7)));
+        productList.add(new Product12("Macbook", "L08", 7500000, LocalDate.of(2022, 1, 8)));
+        productList.add(new Product12("PC", "L09", 13500000, LocalDate.of(2022, 1, 9)));
+        productList.add(new Product12("PC", "L10", 9500000, LocalDate.of(2022, 1, 10)));
+        productList.add(new Product12("PC", "L11", 10500000, LocalDate.of(2022, 1, 9)));
+    }
+
+
+    @Override
+    public void sortProduct(int option) {
+        switch (option) {
+            case 1:
+                sortByName();
+                break;
+            case 2:
+                sortByPrice();
+                break;
+            case 3:
+                sortByDate();
+                break;
+            case 4:
+                sortByPriceAndDate();
+                break;
+            default:
+                System.out.println("Invalid option");
+                break;
+        }
+    }
+
+
+    public void sortByName() {
+        productList.stream()
+                .sorted((p1, p2) -> p1.getName().compareTo(p2.getName()))
+                .forEach(System.out::println);
+    }
+
+    public void sortByPrice() {
+        productList.stream()
+                .sorted((p1, p2) -> Double.compare(p1.getPrice(), p2.getPrice()))
+                .forEach(System.out::println);
+    }
+
+    public void sortByDate() {
+        productList.stream()
+                .sorted((p1, p2) -> p1.getDateOfManufacture().compareTo(p2.getDateOfManufacture()))
+                .forEach(System.out::println);
+    }
+
+    public void sortByPriceAndDate() {
+        productList.stream()
+                .sorted((p1, p2) -> Double.compare(p1.getPrice(), p2.getPrice()))
+                .sorted((p1, p2) -> p1.getDateOfManufacture().compareTo(p2.getDateOfManufacture()))
+                .forEach(System.out::println);
+    }
+}

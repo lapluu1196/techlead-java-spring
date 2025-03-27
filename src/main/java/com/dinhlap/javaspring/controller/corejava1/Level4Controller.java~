@@ -1,0 +1,27 @@
+package com.dinhlap.javaspring.controller.corejava1;
+
+import com.dinhlap.javaspring.service.corejava1.Level4Service;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("api/core-java-1/level-4")
+@Tag(name = "Core Java 1 - Level 4", description = "APIs for Core Java 1 - Level 4")
+public class Level4Controller {
+    @Autowired
+    private Level4Service level4Service;
+
+    @Operation(summary = "Number of moves", description = "Input an array of numbers, returns the number of moves required to sort the list in ascending order using bubble sort.")
+    @GetMapping("/number-of-moves")
+    public ResponseEntity<?> numberOfMoves(@RequestParam int[] arr) {
+        return ResponseEntity.ok(level4Service.minMoves(arr));
+    }
+
+    @Operation(summary = "the number of distinct subsequences", description = "Input an array of numbers, ")
+}

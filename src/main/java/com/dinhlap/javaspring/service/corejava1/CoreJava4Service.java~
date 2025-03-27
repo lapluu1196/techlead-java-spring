@@ -1,0 +1,5 @@
+package com.dinhlap.javaspring.service;
+
+public interface CoreJava4Service {
+    
+}

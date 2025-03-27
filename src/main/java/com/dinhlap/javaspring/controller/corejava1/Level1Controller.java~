@@ -1,0 +1,80 @@
+package com.dinhlap.javaspring.controller.corejava1;
+
+import com.dinhlap.javaspring.service.corejava1.Level1Service;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("api/core-java-1/level-1")
+@Tag(name = "Core Java 1 - Level 1", description = "APIs for Core Java 1 - Level 1")
+public class Level1Controller {
+    @Autowired
+    private Level1Service level1Service;
+
+    @Operation(summary = "Sum of two numbers", description = "Input two numbers, returns the sum of two numbers.")
+    @GetMapping("/sum")
+    public ResponseEntity<?> sum(int a, int b) {
+        return ResponseEntity.ok(level1Service.sum(a, b));
+    }
+
+    @Operation(summary = "Length of a string", description = "Input a string, returns the length of a string.")
+    @GetMapping("/length")
+    public ResponseEntity<?> length(String s) {
+        return ResponseEntity.ok(level1Service.length(s));
+    }
+
+    @Operation(summary = "Shortest string in an array", description = "Input an array of strings, returns the shortest string in an array.")
+    @GetMapping("/shortest")
+    public ResponseEntity<?> shortest(String[] arr) {
+        return ResponseEntity.ok(level1Service.shortest(arr));
+    }
+
+    @Operation(summary = "Square of a number", description = "Input a number, returns the square of a number.")
+    @GetMapping("/square")
+    public ResponseEntity<?> square(int a) {
+        return ResponseEntity.ok(level1Service.square(a));
+    }
+
+    @Operation(summary = "Largest number in an array", description = "Input an array of numbers, returns the largest number in an array.")
+    @GetMapping("/max")
+    public ResponseEntity<?> max(int[] arr) {
+        return ResponseEntity.ok(level1Service.max(arr));
+    }
+
+    @Operation(summary = "Sort an array", description = "Input an array of numbers, returns the sorted array.")
+    @GetMapping("/sort")
+    public ResponseEntity<?> sort(@RequestParam int[] arr) {
+        return ResponseEntity.ok(level1Service.sort(arr));
+    }
+
+    @Operation(summary = "Sort an array", description = "Input an array of strings, returns the sorted array.")
+    @GetMapping("/sort-string")
+    public ResponseEntity<?> sort(@RequestParam String[] arr) {
+        return ResponseEntity.ok(level1Service.sort(arr));
+    }
+
+    @Operation(summary = "Median of an array", description = "Input an array of numbers, returns the median of an array.")
+    @GetMapping("/median")
+    public ResponseEntity<?> median(int[] arr) {
+        return ResponseEntity.ok(level1Service.median(arr));
+    }
+
+    @Operation(summary = "Count words in a string", description = "Input a string, returns the number of words in a string.")
+    @GetMapping("/count-words")
+    public ResponseEntity<?> countWords(String s) {
+        return ResponseEntity.ok(level1Service.countWords(s));
+    }
+
+    @Operation(summary = "Count 'a' in an array", description = "Input an array of strings, returns the number of 'a' in an array.")
+    @GetMapping("/count-a")
+    public ResponseEntity<?> countA(String[] arr) {
+        return ResponseEntity.ok(level1Service.countA(arr));
+    }
+}

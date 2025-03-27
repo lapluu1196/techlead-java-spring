@@ -1,0 +1,4 @@
+package com.dinhlap.javaspring.service.corejava2;
+
+public interface Bai1 {
+}
