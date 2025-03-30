@@ -1,5 +1,6 @@
 package com.dinhlap.javaspring.repository.sakila;
 
+import com.dinhlap.javaspring.dto.sakilaDTO.Query11;
 import com.dinhlap.javaspring.dto.sakilaDTO.Query17;
 import com.dinhlap.javaspring.dto.sakilaDTO.Query24;
 import com.dinhlap.javaspring.dto.sakilaDTO.Query26;
@@ -17,6 +18,10 @@ import java.util.List;
 
 @Repository
 public interface ActorRepository extends JpaRepository<Actor, Short> {
+    @Query(value = "SELECT new com.dinhlap.javaspring.dto.sakilaDTO.Query11(a.firstName, a.lastName) " +
+            "FROM Actor a ")
+    List<Query11> query11();
+
     @Query(value = "SELECT new com.dinhlap.javaspring.dto.sakilaDTO.Query17(a.firstName, a.lastName, COUNT(fa.film.filmId)) " +
             "FROM Actor a " +
             "JOIN FilmActor fa ON a.actorId = fa.actor.actorId " +

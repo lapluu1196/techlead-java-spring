@@ -9,7 +9,6 @@ import com.dinhlap.javaspring.repository.sakila.StoreRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -38,7 +37,7 @@ public class SakilaController {
 
     @GetMapping("/query-1-1")
     public ResponseEntity<?> query1_1() {
-        return ResponseEntity.ok(actorRepository.findAll());
+        return ResponseEntity.ok(actorRepository.query11());
     }
 
     @GetMapping("/query-1-2")
