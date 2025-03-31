@@ -31,7 +31,7 @@ public interface CustomerRepository extends JpaRepository<Customer, Integer> {
             "FROM Customer c " +
             "JOIN Payment p ON c.customerId = p.customer.customerId " +
             "GROUP BY c.customerId, c.firstName, c.lastName " +
-            "ORDER BY SUM(p.amount) DESC")
+            "ORDER BY SUM(p.amount) DESC LIMIT 10")
     List<Query21> query21();
 
     @Query(value = "SELECT c.first_name, c.last_name, a.address, a.phone " +

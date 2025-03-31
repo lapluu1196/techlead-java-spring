@@ -1,5 +1,7 @@
 package com.dinhlap.javaspring.config;
 
+import com.dinhlap.javaspring.exception.CustomAccessDeniedHandler;
+import com.dinhlap.javaspring.exception.CustomUnauthorizeHandler;
 import com.dinhlap.javaspring.security.JwtAuthenticationFilter;
 import com.dinhlap.javaspring.service.CustomUserDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,12 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
     @Autowired
     private CustomUserDetailService customUserDetailService;
+
+    @Autowired
+    public CustomUnauthorizeHandler customUnauthorizeHandler;
+
+    @Autowired
+    public CustomAccessDeniedHandler customAccessDeniedHandler;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -60,9 +68,12 @@ public class SecurityConfig {
 
         http.authenticationProvider(authenticationProvider());
 
+        http.exceptionHandling(exception -> exception
+                .authenticationEntryPoint(customUnauthorizeHandler)
+                .accessDeniedHandler(customAccessDeniedHandler));
+
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
-
 }
