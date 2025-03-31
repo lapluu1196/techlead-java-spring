@@ -52,7 +52,8 @@ public interface FilmRepository extends JpaRepository<Film, Short> {
             "JOIN customer c ON r.customer_id = c.customer_id " +
             "GROUP BY f.film_id, f.title " +
             "HAVING COUNT(DISTINCT c.customer_id) > 50 " +
-            "AND MAX(COUNT(c.customer_id)) = 1", nativeQuery = true)
+            "AND COUNT(*) = COUNT(DISTINCT c.customer_id)",
+            nativeQuery = true)
     List<Query28> query28();
 
     @Query(value = "SELECT f.title " +

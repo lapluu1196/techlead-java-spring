@@ -39,14 +39,14 @@ public interface ActorRepository extends JpaRepository<Actor, Short> {
             "HAVING COUNT(DISTINCT c.category_id) = (SELECT COUNT(*) FROM category)", nativeQuery = true)
     List<Query24> query24();
 
-    @Query(value = "SELECT a.first_name, a.last_name, SUM(p.amount) AS total_revenue " +
-            "FROM actor a " +
-            "JOIN film_actor fa ON a.actor_id = fa.actor_id " +
-            "JOIN film f ON fa.film_id = f.film_id " +
-            "JOIN inventory i ON f.film_id = i.film_id " +
-            "JOIN rental r ON i.inventory_id = r.inventory_id " +
-            "JOIN payment p ON r.rental_id = p.rental_id " +
-            "GROUP BY a.actor_id, a.first_name, a.last_name", nativeQuery = true)
+    @Query(value = "SELECT new com.dinhlap.javaspring.dto.sakilaDTO.Query26(a.lastName, a.firstName, SUM(p.amount)) " +
+            "FROM Actor a " +
+            "JOIN FilmActor fa ON a.actorId = fa.actor.actorId " +
+            "JOIN Film f ON fa.film.filmId = f.filmId " +
+            "JOIN Inventory i ON f.filmId = i.film.filmId " +
+            "JOIN Rental r ON i.inventoryId = r.inventory.inventoryId " +
+            "JOIN Payment p ON r.rentalId = p.rental.rentalId " +
+            "GROUP BY a.actorId, a.firstName, a.lastName")
     List<Query26> query26();
 
     @Query(value = "SELECT a.first_name, a.last_name " +

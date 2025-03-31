@@ -6,6 +6,7 @@ import com.dinhlap.javaspring.entity.User;
 import com.dinhlap.javaspring.service.CustomUserDetailService;
 import com.dinhlap.javaspring.service.UserService;
 import com.dinhlap.javaspring.util.JwtUtil;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,7 @@ public class UserController {
     @Autowired
     private CustomUserDetailService userDetailsService;
 
+    @Operation(summary = "Register a new user", description = "Register a new user")
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody UserRequest userRequest) {
         try {
@@ -44,6 +46,7 @@ public class UserController {
         }
     }
 
+    @Operation(summary = "Get current user", description = "Get current user")
     @GetMapping("/me")
     public ResponseEntity<UserResponse> getCurrentUser(HttpServletRequest request) {
         try {
